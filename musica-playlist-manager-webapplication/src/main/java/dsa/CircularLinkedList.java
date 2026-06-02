@@ -17,14 +17,14 @@ public class CircularLinkedList {
     }
 
     public void addLast(Song x) {
-        Song newSong = new Song(x.id, x.title, x.artist, x.duration, x.filePath);
+        Song newSong = new Song(x.getId(), x.getTitle(), x.getArtist(), x.getDuration(), x.getFilePath());
         if (isEmpty()) {
             head = tail = newSong;
-            tail.next = head; 
+            tail.setNext(head); 
         } else {
-            tail.next = newSong;
+            tail.setNext(newSong);
             tail = newSong;
-            tail.next = head; 
+            tail.setNext(head); 
         }
         size++;
     }
@@ -36,13 +36,13 @@ public class CircularLinkedList {
         Song prev = tail;
 
         do {
-            if (p.id.equals(id)) {
+            if (p.getId().equals(id)) {
                 if (size == 1) {
                     head = tail = null;
                 } else {
-                    prev.next = p.next;
+                    prev.setNext(p.getNext());
                     if (p == head) {
-                        head = p.next;
+                        head = p.getNext();
                     }
                     if (p == tail) {
                         tail = prev;
@@ -52,7 +52,7 @@ public class CircularLinkedList {
                 return true;
             }
             prev = p;
-            p = p.next;
+            p = p.getNext();
         } while (p != head);
 
         return false;

@@ -1,10 +1,11 @@
-package service;
+    package service;
 
 import dsa.MyBSTree;
 import dsa.HistoryStack;
 import model.Song;
 
 import java.util.List;
+import java.util.Random;
 
 public class PlaybackController {
     private static PlaybackController instance;
@@ -58,17 +59,27 @@ public class PlaybackController {
         }
     }
 
-    public Song nextTrack() {
-        if (playlistManager.isEmpty()) return null;
-
-        Song nextSong = null;
-        if (currentPlayingSong == null) {
-            nextSong = playlistManager.playlist.head;
-        } else {
-            nextSong = currentPlayingSong.next;
+    public Song nextTrack() {       
+        if (playlistManager.isEmpty()) {
+            return null;
         }
-
+        Song nextSong = null;
+        if (isShuffle) {          
+            int totalSongs = playlistManager.shuffleList.size();          
+            if (totalSongs > 0) {
+                Random random = new Random();
+                int randomIndex = random.nextInt(totalSongs);
+                nextSong = playlistManager.shuffleList.get(randomIndex);
+            }
+        } else {
+            if (currentPlayingSong == null) {
+                nextSong = playlistManager.playlist.head;
+            } else {
+                nextSong = currentPlayingSong.getNext();
+            }
+        }
         playSong(nextSong);
+        
         return nextSong;
     }
 

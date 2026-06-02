@@ -42,7 +42,7 @@ public class PlayerServlet extends HttpServlet {
         if (currentSong != null) {
             String json = String.format(
                 "{\"status\":\"success\", \"title\":\"%s\", \"artist\":\"%s\", \"filePath\":\"%s\"}",
-                currentSong.title, currentSong.artist, currentSong.filePath
+                currentSong.getTitle(), currentSong.getArtist(), currentSong.getFilePath()
             );
             response.getWriter().write(json);
         } else {

@@ -38,13 +38,13 @@ public class MyBSTree {
             return new BSTNode(x);
         }
 
-        int cmp = x.title.compareToIgnoreCase(p.info.title);
+        int cmp = x.getTitle().compareToIgnoreCase(p.info.getTitle());
         if (cmp < 0) {
             p.left = insert(p.left, x);
         } else if (cmp > 0) {
             p.right = insert(p.right, x);
         } else {
-            if (x.id.compareTo(p.info.id) < 0) {
+            if (x.getId().compareTo(p.info.getId()) < 0) {
                 p.left = insert(p.left, x);
             } else {
                 p.right = insert(p.right, x);
@@ -59,9 +59,9 @@ public class MyBSTree {
 
     private Song search(BSTNode p, String title) {
         if (p == null) return null;
-        if (p.info.title.equalsIgnoreCase(title)) return p.info;
+        if (p.info.getTitle().equalsIgnoreCase(title)) return p.info;
 
-        int cmp = title.compareToIgnoreCase(p.info.title);
+        int cmp = title.compareToIgnoreCase(p.info.getTitle());
         if (cmp < 0) return search(p.left, title);
         return search(p.right, title);
     }
