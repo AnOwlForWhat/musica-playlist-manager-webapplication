@@ -117,7 +117,7 @@ classDiagram
     *   Space: $O(1)$.
 *   **Edge Cases**: Playlist rỗng (trả về null), danh sách chỉ có 1 bài hát (next tự trỏ về chính nó).
 
-### 2.2. Previous Track
+### 2.3. Previous Track
 *   **Pseudocode**:
     ```text
     function prevTrack():
@@ -130,7 +130,7 @@ classDiagram
 *   **Complexity**: Time $O(1)$, Space $O(1)$.
 *   **Edge Cases**: Stack rỗng (chưa từng nhấn next trước đó) -> Giữ nguyên bài hiện tại hoặc thông báo lỗi.
 
-### 2.3. Add Song
+### 2.4. Add Song
 *   **Pseudocode**:
     ```text
     function addSong(Song s):
