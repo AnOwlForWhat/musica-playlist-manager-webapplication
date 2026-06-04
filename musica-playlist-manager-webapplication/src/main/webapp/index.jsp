@@ -124,12 +124,12 @@
                     %>
                     <tr>
                         <td>
-                            <button onclick="playSong('<%= song.title %>')">[Play]</button>
+                            <button onclick="playSong('<%= song.getTitle() %>')">[Play]</button>
                         </td>
-                        <td><%= song.id %></td>
-                        <td><%= song.title %></td>
-                        <td><%= song.artist %></td>
-                        <td><%= song.duration %>s</td>
+                        <td><%= song.getId() %></td>
+                        <td><%= song.getTitle() %></td>
+                        <td><%= song.getArtist() %></td>
+                        <td><%= song.getDuration() %>s</td>
                     </tr>
                     <% 
                             }

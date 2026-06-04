@@ -15,7 +15,7 @@ public class PlaybackController {
     public Song currentPlayingSong;
     public boolean isShuffle = false;
     public boolean isRepeat = true;
-
+    public int currentShuffleIndex = 0;
     private PlaybackController() {
         playlistManager = new PlaylistManager();
         historyStack = new HistoryStack();
@@ -50,7 +50,7 @@ public class PlaybackController {
         playlistManager.addSong(song);
     }
 
-    public void playSong(Song song) {
+    public void playedSong(Song song) {
         if (song != null) {
             if (currentPlayingSong != null) {
                 historyStack.push(currentPlayingSong); 
@@ -66,19 +66,22 @@ public class PlaybackController {
         Song nextSong = null;
         if (isShuffle) {          
             int totalSongs = playlistManager.shuffleList.size();          
-            if (totalSongs > 0) {
-                Random random = new Random();
-                int randomIndex = random.nextInt(totalSongs);
-                nextSong = playlistManager.shuffleList.get(randomIndex);
+            if (totalSongs > 0) {            
+                nextSong = playlistManager.shuffleList.get(currentShuffleIndex);
+                currentShuffleIndex++;
+                if (currentShuffleIndex >= totalSongs) {
+                    playlistManager.shufflePlaylist();
+                    currentShuffleIndex = 0;
+                }
             }
-        } else {
+        }else{
             if (currentPlayingSong == null) {
                 nextSong = playlistManager.playlist.head;
             } else {
                 nextSong = currentPlayingSong.getNext();
             }
         }
-        playSong(nextSong);
+        playedSong(nextSong);
         
         return nextSong;
     }
