@@ -52,14 +52,27 @@ classDiagram
         +Song currentPlayingSong
         +boolean isShuffle
         +boolean isRepeat
+        +int currentShuffleIndex
         +nextTrack() Song
         +prevTrack() Song
+        +playedSong(Song song)
+        +toggleShuffle()
+    }
+
+    class PlaylistManager {
+        +CircularLinkedList playlist
+        +ArrayList~Song~ shuffleList
+        +addSong(Song song)
+        +removeSong(String songId)
+        +isEmpty() boolean
+        +shufflePlaylist()
     }
 
     PlaybackController o-- PlaylistManager
     PlaybackController o-- HistoryStack
     PlaybackController o-- MyBSTree
     CircularLinkedList *-- Song
+    PlaylistManager *-- CircularLinkedList
 ```
 
 ### 1.3. Data Structure & Lý do đề xuất (Why)
@@ -108,8 +121,7 @@ classDiagram
             else:
                 nextSong = currentPlayingSong.getNext()
         
-        historyStack.push(currentPlayingSong)
-        currentPlayingSong = nextSong
+        playedSong(nextSong)
         return nextSong
     ```
 *   **Complexity**: 
@@ -117,7 +129,7 @@ classDiagram
     *   Space: $O(1)$.
 *   **Edge Cases**: Playlist rỗng (trả về null), danh sách chỉ có 1 bài hát (next tự trỏ về chính nó).
 
-### 2.3. Previous Track
+### 2.2. Previous Track
 *   **Pseudocode**:
     ```text
     function prevTrack():
@@ -130,7 +142,7 @@ classDiagram
 *   **Complexity**: Time $O(1)$, Space $O(1)$.
 *   **Edge Cases**: Stack rỗng (chưa từng nhấn next trước đó) -> Giữ nguyên bài hiện tại hoặc thông báo lỗi.
 
-### 2.4. Add Song
+### 2.3. Add Song
 *   **Pseudocode**:
     ```text
     function addSong(Song s):
