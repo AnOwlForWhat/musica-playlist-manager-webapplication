@@ -38,8 +38,8 @@ public class PlaybackController {
         songLibrary.insert(new Song("S03", "eafaef", "sdeafe", 210, "data/music/lac-troi.mp3"));
     }
 
-    public Song searchSongInLibrary(String title) {
-        return songLibrary.search(title);
+    public Song searchSongInLibrary(String title, String id) {
+        return songLibrary.search(title, id);
     }
 
     public List<Song> getSortedLibrary() {
@@ -58,7 +58,7 @@ public class PlaybackController {
             currentPlayingSong = song;
         }
     }
-
+        
     public Song nextTrack() {       
         if (playlistManager.isEmpty()) {
             return null;
@@ -85,7 +85,6 @@ public class PlaybackController {
         
         return nextSong;
     }
-
     public Song prevTrack() {
         if (historyStack.isEmpty()) return null;
 

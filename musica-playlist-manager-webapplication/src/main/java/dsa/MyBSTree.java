@@ -53,17 +53,30 @@ public class MyBSTree {
         return p;
     }
 
-    public Song search(String title) {
-        return search(root, title);
+    public Song search(String title, String id) {
+        return search(root, title, id);
     }
 
-    private Song search(BSTNode p, String title) {
+    private Song search(BSTNode p, String title, String id) {
         if (p == null) return null;
-        if (p.info.getTitle().equalsIgnoreCase(title)) return p.info;
-
+        
         int cmp = title.compareToIgnoreCase(p.info.getTitle());
-        if (cmp < 0) return search(p.left, title);
-        return search(p.right, title);
+        if (cmp < 0){
+            return search(p.left, title, id);
+        } else if(cmp > 0){
+            return search(p.right, title,id);
+        }else{
+              if(p.info.getId().equalsIgnoreCase(id)) return p.info;
+              else{
+                    int cmpID = id.compareTo(p.info.getId());
+                    if(cmpID <0) 
+                        return search(p.left, title, id);
+                    else return search(p.right, title, id);
+              }
+        }
+        
+        
+        
     }
 
     public List<Song> getSortedSongs() {

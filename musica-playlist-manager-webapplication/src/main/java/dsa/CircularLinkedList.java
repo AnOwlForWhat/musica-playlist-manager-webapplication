@@ -16,7 +16,7 @@ public class CircularLinkedList {
         return head == null;
     }
 
-    public void addLast(Song x) {
+    public Song addLast(Song x) {
         Song newSong = new Song(x.getId(), x.getTitle(), x.getArtist(), x.getDuration(), x.getFilePath());
         if (isEmpty()) {
             head = tail = newSong;
@@ -27,6 +27,7 @@ public class CircularLinkedList {
             tail.setNext(head); 
         }
         size++;
+        return newSong;
     }
 
     public boolean remove(String id) {

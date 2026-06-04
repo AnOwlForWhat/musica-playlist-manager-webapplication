@@ -15,14 +15,38 @@ public class PlaylistManager {
     }
 
     public void addSong(Song song) {
-        playlist.addLast(song);
-        shuffleList.add(song);
+        Song playlistSong = playlist.addLast(song);
+        shuffleList.add(playlistSong);
     }
 
     public void removeSong(String songId) {
         playlist.remove(songId);
+        
+        for (int i = 0; i < shuffleList.size(); i++) {
+        Song s = shuffleList.get(i);
+        if (s.getId().equals(songId)) {
+            shuffleList.remove(i);
+            break; 
+        }
     }
-
+    }
+    
+    public void shufflePlaylist(){
+        if(shuffleList == null || shuffleList.isEmpty()){
+            return;
+        }
+        Random random = new Random();
+        int n = shuffleList.size();
+        
+        //Fisher-Yates
+        for(int i = n - 1 ; i > 0; i--){
+            int j = random.nextInt(i + 1);
+            
+            Song temp = shuffleList.get(i);
+            shuffleList.set(i, shuffleList.get(j));
+            shuffleList.set(j, temp);
+        }
+    }
     public boolean isEmpty() {
         return playlist.isEmpty();
     }
