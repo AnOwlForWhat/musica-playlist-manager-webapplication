@@ -50,20 +50,6 @@ public class PlaylistManager {
     public boolean isEmpty() {
         return playlist.isEmpty();
     }
-    public void shufflePlaylist(){
-        if(shuffleList == null || shuffleList.isEmpty()){
-            return;
-        }
-        Random random = new Random();
-        int n = shuffleList.size();
-        
-        //Fisher-Yates
-        for(int i = n - 1 ; i > 0; i--){
-            int j = random.nextInt(i + 1);
-            
-            Song temp = shuffleList.get(i);
-            shuffleList.set(i, shuffleList.get(j));
-            shuffleList.set(j, temp);
-        }
-    }
+   
+    
 }

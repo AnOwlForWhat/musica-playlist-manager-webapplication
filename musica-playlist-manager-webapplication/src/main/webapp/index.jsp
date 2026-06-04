@@ -124,7 +124,7 @@
                     %>
                     <tr>
                         <td>
-                            <button onclick="playSong('<%= song.getTitle() %>')">[Play]</button>
+                            <button onclick="playSong('<%= song.getId() %>')">[Play]</button>
                         </td>
                         <td><%= song.getId() %></td>
                         <td><%= song.getTitle() %></td>
@@ -163,8 +163,8 @@
     <script>
         let isPlaying = false;
 
-        function playSong(songTitle) {
-            fetch('player?action=play&songId=' + encodeURIComponent(songTitle))
+        function playSong(songId) {
+            fetch('player?action=play&songId=' + encodeURIComponent(songId))
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {

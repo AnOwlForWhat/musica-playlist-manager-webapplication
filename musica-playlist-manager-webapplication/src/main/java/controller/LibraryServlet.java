@@ -21,11 +21,7 @@ public class LibraryServlet extends HttpServlet {
         String searchQuery = request.getParameter("search");
         List<Song> songList;
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-            songList = new java.util.ArrayList<>();
-            Song foundSong = playbackController.searchSongInLibrary(searchQuery);
-            if (foundSong != null) {
-                songList.add(foundSong);
-            }
+            songList = playbackController.searchSongsByTitle(searchQuery);
         } else {
             songList = playbackController.getSortedLibrary();
         }

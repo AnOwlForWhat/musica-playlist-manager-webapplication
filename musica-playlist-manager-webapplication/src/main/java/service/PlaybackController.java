@@ -1,9 +1,10 @@
     package service;
 
-import dsa.MyBSTree;
 import dsa.HistoryStack;
 import model.Song;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +12,8 @@ public class PlaybackController {
     private static PlaybackController instance;
     public PlaylistManager playlistManager;
     public HistoryStack historyStack;
-    public MyBSTree songLibrary;
+    public HashMap<String, Song> songMap;
+    public ArrayList<Song> songList;
     public Song currentPlayingSong;
     public boolean isShuffle = false;
     public boolean isRepeat = true;
@@ -19,7 +21,8 @@ public class PlaybackController {
     private PlaybackController() {
         playlistManager = new PlaylistManager();
         historyStack = new HistoryStack();
-        songLibrary = new MyBSTree();
+        songMap = new HashMap<>();
+        songList = new ArrayList<>();
         
         loadHardcodedSongs();
     }
@@ -32,18 +35,35 @@ public class PlaybackController {
     }
 
     private void loadHardcodedSongs() {
-        songLibrary.clear();
-        songLibrary.insert(new Song("S01", "COme my way", "j970", 240, "data/music/chung-ta.mp3"));
-        songLibrary.insert(new Song("S02", "sadweaf", "sfeaf ", 252, "data/music/noi-nay-co-anh.mp3"));
-        songLibrary.insert(new Song("S03", "eafaef", "sdeafe", 210, "data/music/lac-troi.mp3"));
+        songMap.clear();
+        songList.clear();
+        addSongToLibrary(new Song("S01", "COme my way", "j970", 240, "data/music/chung-ta.mp3"));
+        addSongToLibrary(new Song("S02", "sadweaf", "sfeaf ", 252, "data/music/noi-nay-co-anh.mp3"));
+        addSongToLibrary(new Song("S03", "eafaef", "sdeafe", 210, "data/music/lac-troi.mp3"));
     }
 
-    public Song searchSongInLibrary(String title, String id) {
-        return songLibrary.search(title, id);
+    private void addSongToLibrary(Song song) {
+        songMap.put(song.getId(), song);
+        songList.add(song);
+    }
+
+    public Song getSongById(String id) {
+        return songMap.get(id);
+    }
+
+    public List<Song> searchSongsByTitle(String titleQuery) {
+        List<Song> result = new ArrayList<>();
+        String queryLower = titleQuery.toLowerCase();
+        for (Song song : songList) {
+            if (song.getTitle().toLowerCase().contains(queryLower)) {
+                result.add(song);
+            }
+        }
+        return result;
     }
 
     public List<Song> getSortedLibrary() {
-        return songLibrary.getSortedSongs();
+        return songList;
     }
 
     public void addSongToPlaylist(Song song) {

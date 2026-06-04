@@ -26,7 +26,7 @@ public class PlayerServlet extends HttpServlet {
 
         if (action != null) {
             if (action.equals("play")) {
-                Song songToPlay = playbackController.searchSongInLibrary(songId); 
+                Song songToPlay = playbackController.getSongById(songId); 
                 playbackController.playedSong(songToPlay);
                 currentSong = songToPlay;
             } else if (action.equals("next")) {
