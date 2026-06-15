@@ -17,17 +17,16 @@ public class CircularLinkedList {
     }
 
     public Song addLast(Song x) {
-        Song newSong = new Song(x.getId(), x.getTitle(), x.getArtist(), x.getDuration(), x.getFilePath());
         if (isEmpty()) {
-            head = tail = newSong;
-            tail.setNext(head); 
+            head = tail = x;         
+            tail.setNext(head);
         } else {
-            tail.setNext(newSong);
-            tail = newSong;
-            tail.setNext(head); 
+            tail.setNext(x);
+            tail = x;
+            tail.setNext(head);
         }
         size++;
-        return newSong;
+        return x;
     }
 
     public boolean remove(String id) {

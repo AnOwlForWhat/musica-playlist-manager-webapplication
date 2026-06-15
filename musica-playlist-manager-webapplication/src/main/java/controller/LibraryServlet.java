@@ -25,11 +25,6 @@ public class LibraryServlet extends HttpServlet {
         } else {
             songList = playbackController.getSortedLibrary();
         }
-        if (playbackController.playlistManager.isEmpty() && songList != null) {
-            for (Song s : songList) {
-                playbackController.addSongToPlaylist(s);
-            }
-        }
         request.setAttribute("songs", songList);
         request.getRequestDispatcher("index.jsp").forward(request, response);
     }

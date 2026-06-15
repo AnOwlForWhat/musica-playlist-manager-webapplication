@@ -31,8 +31,12 @@ public class PlayerServlet extends HttpServlet {
                 currentSong = songToPlay;
             } else if (action.equals("next")) {
                 currentSong = playbackController.nextTrack();
+                playbackController.playedSong(currentSong);
             } else if (action.equals("prev")) {
                 currentSong = playbackController.prevTrack();
+            } else if (action.equals("toggleRepeat")) {
+                playbackController.isRepeat = !playbackController.isRepeat;
+                currentSong = playbackController.currentPlayingSong;
             }
         }
 
