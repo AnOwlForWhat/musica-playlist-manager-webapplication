@@ -1,39 +1,59 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="model.Song" %>
-<%@ page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Musica - Project Skeleton (30% Complete)</title>
+    <title>Musica - Project Skeleton</title>
     <style>
         /* Primitive Black and White Styling */
         body {
             font-family: monospace;
             background-color: #ffffff;
             color: #000000;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        header {
+            padding: 20px;
+            border-bottom: 1px solid #000;
         }
 
         h1, h2, h3 {
             text-transform: uppercase;
+            margin-top: 0;
         }
 
         .container {
             display: flex;
-            gap: 20px;
+            flex: 1;
+            overflow: hidden; 
         }
 
         .sidebar {
             width: 200px;
-            border: 1px solid #000000;
+            border-right: 1px solid #000000;
             padding: 15px;
+            overflow-y: auto;
         }
 
-        .main-content {
+        .sidebar p a {
+            text-decoration: none;
+            color: #000;
+        }
+        
+        .sidebar p a:hover {
+            text-decoration: underline;
+        }
+
+        /* The Main Content Area for Fragments */
+        .content-section {
             flex-grow: 1;
-            border: 1px solid #000000;
             padding: 15px;
+            overflow-y: auto;
         }
 
         .search-box {
@@ -69,140 +89,89 @@
             color: #ffffff;
         }
 
-        /* Basic Bottom Player Strip */
-        .player-panel {
-            margin-top: 20px;
-            border: 1px solid #000000;
+        /* Fixed Bottom Player Strip */
+        .player-bar-fixed {
+            border-top: 1px solid #000000;
             padding: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px; /* Fixed height for player */
         }
+        
+        /* Add margin to bottom of container so content isn't hidden behind player */
+        .container {
+            margin-bottom: 90px; 
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin: 0 20px;
+        }
+        
+        .progress-container input[type="range"] {
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .player-info {
+            min-width: 200px;
+        }
+
     </style>
 </head>
 <body>
 
-    <h1>Musica - System Console (Week 2 Draft)</h1>
-    <hr style="border: 1px solid #000000; margin-bottom: 20px;">
+    <header>
+        <h1>Musica - System Console (Week 3 AJAX)</h1>
+    </header>
 
     <div class="container">
         <!-- sidebar nav -->
-        <div class="sidebar">
+        <nav class="sidebar">
             <h3>Menu</h3>
-            <p><a href="library" style="color: #000;">[01] Library</a></p>
-            <p><a href="#" style="color: #000;">[02] Playlists</a></p>
-            <p><a href="#" style="color: #000;">[03] History</a></p>
-        </div>
+            <p><a href="#" id="nav-library" onclick="loadSection('library'); return false;">[01] Library</a></p>
+            <p><a href="#" id="nav-playlist" onclick="loadSection('playlist'); return false;">[02] Playlists</a></p>
+            <p><a href="#" id="nav-history" onclick="loadSection('history'); return false;">[03] History</a></p>
+        </nav>
 
-        <!-- Main Directory Area -->
-        <div class="main-content">
-            <h2>Track Library</h2>
-            
-            <div class="search-box">
-                <form action="library" method="get">
-                    <label>Search Song Title: </label>
-                    <input type="text" name="search" style="font-family: monospace;">
-                    <button type="submit">Query</button>
-                </form>
-            </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Action</th>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Artist</th>
-                        <th>Duration (Sec)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                        List<Song> songs = (List<Song>) request.getAttribute("songs");
-                        if (songs != null && !songs.isEmpty()) {
-                            for (Song song : songs) {
-                    %>
-                    <tr>
-                        <td>
-                            <button onclick="playSong('<%= song.getId() %>')">[Play]</button>
-                        </td>
-                        <td><%= song.getId() %></td>
-                        <td><%= song.getTitle() %></td>
-                        <td><%= song.getArtist() %></td>
-                        <td><%= song.getDuration() %>s</td>
-                    </tr>
-                    <% 
-                            }
-                        } else {
-                    %>
-                    <tr>
-                        <td colspan="5" style="text-align: center;">No tracks found. <a href="library">Reload</a></td>
-                    </tr>
-                    <% 
-                        } 
-                    %>
-                </tbody>
-            </table>
-        </div>
+        <!-- Main Directory Area (Dynamic Fragment Loading) -->
+        <main id="content-section" class="content-section">
+            <div style="text-align: center; padding: 20px;">Đang tải thư viện...</div>
+            <!-- Fragments will be injected here via AJAX -->
+        </main>
     </div>
 
-    <!-- Basic Player Panel -->
-    <div class="player-panel">
-        <div>
+    <!-- Fixed Bottom Player Panel -->
+    <footer class="player-bar-fixed">
+        <div class="player-info">
             <strong>Status: </strong> <span id="player-status">Idle</span><br>
             <strong>Track: </strong> <span id="current-track">None</span> - <span id="current-artist">None</span>
         </div>
+        
+        <div class="progress-container">
+            <span id="time-current">0:00</span>
+            <input type="range" id="progress-bar" min="0" max="100" value="0">
+            <span id="time-total">3:45</span>
+        </div>
+
         <div>
+            <button id="btn-shuffle" onclick="controlPlayer('shuffle')">[Shuffle]</button>
             <button onclick="controlPlayer('prev')">[Prev]</button>
             <button onclick="togglePlay()">[Play/Pause]</button>
             <button onclick="controlPlayer('next')">[Next]</button>
         </div>
-    </div>
+    </footer>
 
-
-    <script>
-        let isPlaying = false;
-
-        function playSong(songId) {
-            fetch('player?action=play&songId=' + encodeURIComponent(songId))
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('player-status').innerText = 'Playing';
-                        document.getElementById('current-track').innerText = data.title;
-                        document.getElementById('current-artist').innerText = data.artist;
-                        isPlaying = true;
-                    }
-                });
-        }
-
-        function controlPlayer(action) {
-            fetch('player?action=' + action)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        document.getElementById('player-status').innerText = 'Playing';
-                        document.getElementById('current-track').innerText = data.title;
-                        document.getElementById('current-artist').innerText = data.artist;
-                        isPlaying = true;
-                    } else {
-                        document.getElementById('player-status').innerText = 'Idle';
-                        document.getElementById('current-track').innerText = 'None';
-                        document.getElementById('current-artist').innerText = 'None';
-                        isPlaying = false;
-                    }
-                });
-        }
-
-        function togglePlay() {
-            if (isPlaying) {
-                document.getElementById('player-status').innerText = 'Paused';
-                isPlaying = false;
-            } else {
-                document.getElementById('player-status').innerText = 'Playing';
-                isPlaying = true;
-            }
-        }
-    </script>
+    <!-- Load JS scripts -->
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/player.js"></script>
 </body>
 </html>
