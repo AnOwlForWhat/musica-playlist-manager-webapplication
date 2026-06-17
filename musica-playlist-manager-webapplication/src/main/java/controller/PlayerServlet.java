@@ -37,6 +37,24 @@ public class PlayerServlet extends HttpServlet {
             } else if (action.equals("toggleRepeat")) {
                 playbackController.isRepeat = !playbackController.isRepeat;
                 currentSong = playbackController.currentPlayingSong;
+            } else if (action.equals("add_playlist")) {
+                Song songToAdd = playbackController.getSongById(songId);
+                if (songToAdd != null) {
+                    boolean alreadyExists = playbackController.playlistManager.playlist.contains(songToAdd.getId());
+                    playbackController.addSongToPlaylist(songToAdd);
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    if (alreadyExists) {
+                        response.getWriter().write("{\"status\":\"already_exists\"}");
+                    } else {
+                        response.getWriter().write("{\"status\":\"success\"}");
+                    }
+                } else {
+                    response.setContentType("application/json");
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().write("{\"status\":\"not_found\"}");
+                }
+                return;
             }
         }
 
