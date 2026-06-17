@@ -15,6 +15,8 @@ public class PlaylistManager {
     }
 
     public void addSong(Song song) {
+        // Không thêm nếu bài đã có trong playlist
+        if (playlist.contains(song.getId())) return;
         Song playlistSong = playlist.addLast(song);
         shuffleList.add(playlistSong);
     }

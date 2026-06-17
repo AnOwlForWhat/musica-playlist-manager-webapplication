@@ -42,9 +42,6 @@ public class PlaybackController {
         addSongToLibrary(new Song("S01", "COme my way", "j970", 240, "data/music/chung-ta.mp3"));
         addSongToLibrary(new Song("S02", "sadweaf", "sfeaf ", 252, "data/music/noi-nay-co-anh.mp3"));
         addSongToLibrary(new Song("S03", "eafaef", "sdeafe", 210, "data/music/lac-troi.mp3"));
-        for (Song s : songList) {
-            addSongToPlaylist(s);
-        }
     }
 
     private void addSongToLibrary(Song song) {
@@ -108,10 +105,19 @@ public class PlaybackController {
                 currentShuffleIndex++;
             }
         }else{
-            if (currentPlayingSong == null) {
-                nextSong = playlistManager.playlist.head;
+            if (currentPlayingSong == null || playlistManager.playlist.head == null) {
+                if (playlistManager.playlist.head != null) {
+                    nextSong = playlistManager.playlist.head.info;
+                }
             } else {
-                nextSong = currentPlayingSong.getNext();
+                dsa.CircularLinkedList.Node p = playlistManager.playlist.head;
+                do {
+                    if (p.info.getId().equals(currentPlayingSong.getId())) {
+                        nextSong = p.next.info;
+                        break;
+                    }
+                    p = p.next;
+                } while (p != playlistManager.playlist.head);
             }
         }
         
