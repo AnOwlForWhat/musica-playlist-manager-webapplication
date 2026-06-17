@@ -1,10 +1,23 @@
 package dsa;
 
 import model.Song;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CircularLinkedList {
-    public Song head;
-    public Song tail;
+    
+    public static class Node {
+        public Song info;
+        public Node next;
+        
+        public Node(Song info) {
+            this.info = info;
+            this.next = null;
+        }
+    }
+
+    public Node head;
+    public Node tail;
     public int size;
 
     public CircularLinkedList() {
@@ -17,13 +30,14 @@ public class CircularLinkedList {
     }
 
     public Song addLast(Song x) {
+        Node newNode = new Node(x);
         if (isEmpty()) {
-            head = tail = x;         
-            tail.setNext(head);
+            head = tail = newNode;         
+            tail.next = head;
         } else {
-            tail.setNext(x);
-            tail = x;
-            tail.setNext(head);
+            tail.next = newNode;
+            tail = newNode;
+            tail.next = head;
         }
         size++;
         return x;
@@ -32,17 +46,17 @@ public class CircularLinkedList {
     public boolean remove(String id) {
         if (isEmpty()) return false;
 
-        Song p = head;
-        Song prev = tail;
+        Node p = head;
+        Node prev = tail;
 
         do {
-            if (p.getId().equals(id)) {
+            if (p.info.getId().equals(id)) {
                 if (size == 1) {
                     head = tail = null;
                 } else {
-                    prev.setNext(p.getNext());
+                    prev.next = p.next;
                     if (p == head) {
-                        head = p.getNext();
+                        head = p.next;
                     }
                     if (p == tail) {
                         tail = prev;
@@ -52,14 +66,35 @@ public class CircularLinkedList {
                 return true;
             }
             prev = p;
-            p = p.getNext();
+            p = p.next;
         } while (p != head);
 
+        return false;
+    }
+
+    public boolean contains(String id) {
+        if (isEmpty()) return false;
+        Node p = head;
+        do {
+            if (p.info.getId().equals(id)) return true;
+            p = p.next;
+        } while (p != head);
         return false;
     }
 
     public void clear() {
         head = tail = null;
         size = 0;
+    }
+
+    public java.util.List<Song> toList() {
+        java.util.List<Song> list = new java.util.ArrayList<>();
+        if (isEmpty()) return list;
+        Node p = head;
+        do {
+            list.add(p.info);
+            p = p.next;
+        } while (p != head);
+        return list;
     }
 }

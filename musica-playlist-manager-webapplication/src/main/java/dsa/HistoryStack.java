@@ -28,6 +28,8 @@ public class HistoryStack {
     }
 
     public void push(Song x) {
+        // Không thêm nếu bài đang ở đỉnh stack đã là bài đó rồi
+        if (top != null && top.info.getId().equals(x.getId())) return;
         StackNode q = new StackNode(x);
         q.next = top;
         top = q;
@@ -50,5 +52,15 @@ public class HistoryStack {
     public void clear() {
         top = null;
         size = 0;
+    }
+
+    public java.util.List<Song> toList() {
+        java.util.List<Song> list = new java.util.ArrayList<>();
+        StackNode p = top;
+        while (p != null) {
+            list.add(p.info);
+            p = p.next;
+        }
+        return list;
     }
 }
