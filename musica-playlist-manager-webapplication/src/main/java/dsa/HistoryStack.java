@@ -27,9 +27,26 @@ public class HistoryStack {
         return size;
     }
 
+    public void remove(String id) {
+        if (isEmpty()) return;
+        while (top != null && top.info.getId().equals(id)) {
+            top = top.next;
+            size--;
+        }
+        if (top == null) return;
+        StackNode current = top;
+        while (current.next != null) {
+            if (current.next.info.getId().equals(id)) {
+                current.next = current.next.next;
+                size--;
+            } else {
+                current = current.next;
+            }
+        }
+    }
+
     public void push(Song x) {
-        // Không thêm nếu bài đang ở đỉnh stack đã là bài đó rồi
-        if (top != null && top.info.getId().equals(x.getId())) return;
+        remove(x.getId());
         StackNode q = new StackNode(x);
         q.next = top;
         top = q;

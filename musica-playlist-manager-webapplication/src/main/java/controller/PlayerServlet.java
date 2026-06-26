@@ -31,7 +31,6 @@ public class PlayerServlet extends HttpServlet {
                 currentSong = songToPlay;
             } else if (action.equals("next")) {
                 currentSong = playbackController.nextTrack();
-                playbackController.playedSong(currentSong);
             } else if (action.equals("prev")) {
                 currentSong = playbackController.prevTrack();
             } else if (action.equals("toggleRepeat")) {
@@ -63,8 +62,11 @@ public class PlayerServlet extends HttpServlet {
         
         if (currentSong != null) {
             String json = String.format(
-                "{\"status\":\"success\", \"title\":\"%s\", \"artist\":\"%s\", \"filePath\":\"%s\"}",
-                currentSong.getTitle(), currentSong.getArtist(), currentSong.getFilePath()
+                "{\"status\":\"success\", \"title\":\"%s\", \"artist\":\"%s\", \"filePath\":\"%s\", \"duration\":%d}",
+                currentSong.getTitle().replace("\"", "\\\""), 
+                currentSong.getArtist().replace("\"", "\\\""), 
+                currentSong.getFilePath().replace("\"", "\\\""),
+                currentSong.getDuration()
             );
             response.getWriter().write(json);
         } else {

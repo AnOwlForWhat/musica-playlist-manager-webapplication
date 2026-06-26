@@ -39,9 +39,9 @@ public class PlaybackController {
     private void loadHardcodedSongs() {
         songMap.clear();
         songList.clear();
-        addSongToLibrary(new Song("S01", "COme my way", "j970", 240, "data/music/chung-ta.mp3"));
-        addSongToLibrary(new Song("S02", "sadweaf", "sfeaf ", 252, "data/music/noi-nay-co-anh.mp3"));
-        addSongToLibrary(new Song("S03", "eafaef", "sdeafe", 210, "data/music/lac-troi.mp3"));
+        addSongToLibrary(new Song("S01", "Khong The Say", "Peter Griffin Cover", 240, "data/music/khong-the-say.mp3"));
+        addSongToLibrary(new Song("S02", "Nguoi Im Lang Gap Nguoi Hay Noi", "Peter Griffin Cover", 252, "data/music/nguoi-im-lang-gap-nguoi-hay-noi.mp3"));
+        addSongToLibrary(new Song("S03", "Truoc Khi Em Ton Tai", "Peter Griffin Cover", 210, "data/music/truoc-khi-em-ton-tai.mp3"));
     }
 
     private void addSongToLibrary(Song song) {
@@ -82,18 +82,26 @@ public class PlaybackController {
     }
         
     public Song nextTrack() {       
-        if (isRepeat && currentPlayingSong != null) {
-            return currentPlayingSong;
+        // Push current song to history before moving to next
+        if (currentPlayingSong != null) {
+            historyStack.push(currentPlayingSong);
         }
+        
+        Song nextSong = null;
+        
         if (playlistManager.isEmpty()) {
             if (songList.isEmpty()) return null;
-            if (currentPlayingSong == null) return songList.get(0);
-            int idx = songList.indexOf(currentPlayingSong);
-            if (idx == -1 || idx + 1 >= songList.size()) return songList.get(0);
-            return songList.get(idx + 1);
-        }
-        Song nextSong = null;
-        if (isShuffle) {          
+            if (currentPlayingSong == null) {
+                nextSong = songList.get(0);
+            } else {
+                int idx = songList.indexOf(currentPlayingSong);
+                if (idx == -1 || idx + 1 >= songList.size()) {
+                    nextSong = songList.get(0);
+                } else {
+                    nextSong = songList.get(idx + 1);
+                }
+            }
+        } else if (isShuffle) {          
             int totalSongs = playlistManager.shuffleList.size();          
             if (totalSongs > 0) {            
                 if (currentShuffleIndex >= totalSongs) {
@@ -104,7 +112,7 @@ public class PlaybackController {
                 shuffleIndexHistory.push(currentShuffleIndex);
                 currentShuffleIndex++;
             }
-        }else{
+        } else {
             if (currentPlayingSong == null || playlistManager.playlist.head == null) {
                 if (playlistManager.playlist.head != null) {
                     nextSong = playlistManager.playlist.head.info;
@@ -119,6 +127,11 @@ public class PlaybackController {
                     p = p.next;
                 } while (p != playlistManager.playlist.head);
             }
+        }
+        
+        // Update current playing song
+        if (nextSong != null) {
+            currentPlayingSong = nextSong;
         }
         
         return nextSong;

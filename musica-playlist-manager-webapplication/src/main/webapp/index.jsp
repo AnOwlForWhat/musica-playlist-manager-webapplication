@@ -159,7 +159,7 @@
         <div class="progress-container">
             <span id="time-current">0:00</span>
             <input type="range" id="progress-bar" min="0" max="100" value="0">
-            <span id="time-total">3:45</span>
+            <span id="time-total">0:00</span>
         </div>
 
         <div>
