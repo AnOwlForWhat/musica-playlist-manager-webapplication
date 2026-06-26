@@ -28,7 +28,11 @@ function loadNewTrack(filePath, duration, shouldPlay) {
     timeTotal.innerText = formatTime(duration);
     
     // Gán source mới và ép load
-    audioPlayer.src = filePath;
+    var resolvedPath = filePath;
+    if (window.contextPath && !filePath.startsWith('/') && !filePath.startsWith('http')) {
+        resolvedPath = window.contextPath + '/' + filePath;
+    }
+    audioPlayer.src = resolvedPath;
     audioPlayer.load();
     
     if (shouldPlay) {
@@ -40,7 +44,11 @@ function loadNewTrack(filePath, duration, shouldPlay) {
 
 // 1. Phát một bài hát cụ thể theo ID (gọi khi click nút [Play] trên danh sách)
 function playSong(songId, title, artist) {
-    fetch('player?action=play&songId=' + encodeURIComponent(songId))
+    var url = 'player?action=play&songId=' + encodeURIComponent(songId);
+    if (window.contextPath) {
+        url = window.contextPath + '/' + url;
+    }
+    fetch(url)
         .then(function(response) { return response.json(); })
         .then(function(data) {
             if (data.status === 'success') {
@@ -61,7 +69,11 @@ function controlPlayer(action) {
         return;
     }
 
-    fetch('player?action=' + action)
+    var url = 'player?action=' + action;
+    if (window.contextPath) {
+        url = window.contextPath + '/' + url;
+    }
+    fetch(url)
         .then(function(response) { return response.json(); })
         .then(function(data) {
             if (data.status === 'success') {

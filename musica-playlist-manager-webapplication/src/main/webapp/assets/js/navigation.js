@@ -21,7 +21,11 @@ async function loadSection(viewName, pushHistory = true) {
 
     try {
         // Thêm timestamp để tránh bị trình duyệt lưu cache AJAX (Nguyên nhân 1)
-        const response = await fetch('page?view=' + viewName + '&t=' + Date.now());
+        var url = 'page?view=' + viewName + '&t=' + Date.now();
+        if (window.contextPath) {
+            url = window.contextPath + '/' + url;
+        }
+        const response = await fetch(url);
         if (response.ok) {
             const htmlContent = await response.text();
             contentSec.innerHTML = htmlContent;
@@ -52,7 +56,11 @@ async function searchLibrary(event) {
     contentSec.innerHTML = '<div style="text-align: center; padding: 20px;">Đang tìm kiếm...</div>';
 
     try {
-        const response = await fetch('page?view=library&search=' + encodeURIComponent(query));
+        var url = 'page?view=library&search=' + encodeURIComponent(query);
+        if (window.contextPath) {
+            url = window.contextPath + '/' + url;
+        }
+        const response = await fetch(url);
         if (response.ok) {
             const htmlContent = await response.text();
             contentSec.innerHTML = htmlContent;
@@ -64,7 +72,11 @@ async function searchLibrary(event) {
 
 async function addToPlaylist(songId) {
     try {
-        const response = await fetch('player?action=add_playlist&songId=' + encodeURIComponent(songId));
+        var url = 'player?action=add_playlist&songId=' + encodeURIComponent(songId);
+        if (window.contextPath) {
+            url = window.contextPath + '/' + url;
+        }
+        const response = await fetch(url);
         if (response.ok) {
             const data = await response.json();
             if (data.status === 'success') {

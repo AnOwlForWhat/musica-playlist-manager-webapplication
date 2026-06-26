@@ -170,8 +170,12 @@
         </div>
     </footer>
 
+    <!-- Define context path for JS -->
+    <script>
+        window.contextPath = "${pageContext.request.contextPath}";
+    </script>
     <!-- Load JS scripts -->
-    <script src="assets/js/navigation.js"></script>
-    <script src="assets/js/player.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/navigation.js?v=<%= System.currentTimeMillis() %>"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/player.js?v=<%= System.currentTimeMillis() %>"></script>
 </body>
 </html>
