@@ -1,0 +1,73 @@
+package model;
+
+public class Song {
+    private String id;
+    private String title;
+    private String artist;
+    private int duration; // second
+    private String filePath; // path toi file mp3
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getArtist() {
+        return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public Song() {
+    }
+
+    public Song(String id, String title, String artist, int duration, String filePath) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.duration = duration;
+        this.filePath = filePath;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Song other = (Song) obj;
+        return id != null ? id.equals(other.id) : other.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+}
