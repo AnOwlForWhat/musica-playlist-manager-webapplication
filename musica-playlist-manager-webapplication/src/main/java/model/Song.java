@@ -6,7 +6,6 @@ public class Song {
     private String artist;
     private int duration; // second
     private String filePath; // path toi file mp3
-    private Song next; // duong dna toi bat hat tiep theo bang CLL
 
     public String getId() {
         return id;
@@ -48,14 +47,6 @@ public class Song {
         this.filePath = filePath;
     }
 
-    public Song getNext() {
-        return next;
-    }
-
-    public void setNext(Song next) {
-        this.next = next;
-    }
-
     public Song() {
     }
 
@@ -65,7 +56,6 @@ public class Song {
         this.artist = artist;
         this.duration = duration;
         this.filePath = filePath;
-        this.next = null;
     }
 
     @Override

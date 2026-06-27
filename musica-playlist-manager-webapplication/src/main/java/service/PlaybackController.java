@@ -16,6 +16,7 @@ public class PlaybackController {
     public HashMap<String, Song> songMap;
     public ArrayList<Song> songList;
     public Song currentPlayingSong;
+    public dsa.CircularLinkedList.Node currentPlaylistNode;
     public boolean isShuffle = false;
     public boolean isRepeat = true;
     public int currentShuffleIndex = 0;
@@ -74,10 +75,13 @@ public class PlaybackController {
 
     public void playedSong(Song song) {
         if (song != null) {
-            if (currentPlayingSong != null && !currentPlayingSong.getId().equals(song.getId())) {
-                historyStack.push(currentPlayingSong); 
+            if (currentPlayingSong == null || !currentPlayingSong.getId().equals(song.getId())) {
+                if (currentPlayingSong != null) {
+                    historyStack.push(currentPlayingSong); 
+                }
+                currentPlayingSong = song;
+                currentPlaylistNode = playlistManager.playlist.getNode(song.getId());
             }
-            currentPlayingSong = song;
         }
     }
         
@@ -113,19 +117,14 @@ public class PlaybackController {
                 currentShuffleIndex++;
             }
         } else {
-            if (currentPlayingSong == null || playlistManager.playlist.head == null) {
-                if (playlistManager.playlist.head != null) {
-                    nextSong = playlistManager.playlist.head.info;
+            if (playlistManager.playlist.head != null) {
+                if (currentPlaylistNode == null) {
+                    currentPlaylistNode = playlistManager.playlist.head;
+                    nextSong = currentPlaylistNode.info;
+                } else {
+                    currentPlaylistNode = currentPlaylistNode.next;
+                    nextSong = currentPlaylistNode.info;
                 }
-            } else {
-                dsa.CircularLinkedList.Node p = playlistManager.playlist.head;
-                do {
-                    if (p.info.getId().equals(currentPlayingSong.getId())) {
-                        nextSong = p.next.info;
-                        break;
-                    }
-                    p = p.next;
-                } while (p != playlistManager.playlist.head);
             }
         }
         

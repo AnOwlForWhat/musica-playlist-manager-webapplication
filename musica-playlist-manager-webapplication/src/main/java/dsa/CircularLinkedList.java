@@ -82,6 +82,16 @@ public class CircularLinkedList {
         return false;
     }
 
+    public Node getNode(String id) {
+        if (isEmpty()) return null;
+        Node p = head;
+        do {
+            if (p.info.getId().equals(id)) return p;
+            p = p.next;
+        } while (p != head);
+        return null;
+    }
+
     public void clear() {
         head = tail = null;
         size = 0;

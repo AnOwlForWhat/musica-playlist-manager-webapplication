@@ -46,7 +46,9 @@ public class HistoryStack {
     }
 
     public void push(Song x) {
-        remove(x.getId());
+        if (!isEmpty() && peek().getId().equals(x.getId())) {
+            return; // Skip if it is the same as the top song to avoid direct duplicates, achieving O(1)
+        }
         StackNode q = new StackNode(x);
         q.next = top;
         top = q;
