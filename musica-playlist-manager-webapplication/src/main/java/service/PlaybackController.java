@@ -43,12 +43,10 @@ public class PlaybackController {
         addSongToLibrary(new Song("S01", "Khong The Say", "Peter Griffin Cover", 240, "data/music/khong-the-say.mp3"));
         addSongToLibrary(new Song("S02", "Nguoi Im Lang Gap Nguoi Hay Noi", "Peter Griffin Cover", 252, "data/music/nguoi-im-lang-gap-nguoi-hay-noi.mp3"));
         addSongToLibrary(new Song("S03", "Truoc Khi Em Ton Tai", "Peter Griffin Cover", 210, "data/music/truoc-khi-em-ton-tai.mp3"));
-        
         addSongToLibrary(new Song("S04", "Nhan Sinh Quan", "Peter Griffin Cover", 266, "data/music/nhan-sinh-quan.mp3"));
         addSongToLibrary(new Song("S05", "Phep Mau", "Mounter", 255, "data/music/phep-mau.mp3"));
         addSongToLibrary(new Song("S06", "Tung Ngay Yeu Em", "buitruonglinh", 221, "data/music/tung-ngay-yeu-em.mp3"));
-        addSongToLibrary(new Song("S07", "To Te Ti", "Wren Evans Official", 195, "data/music/to-te-ti.mp3"));           
-    
+        addSongToLibrary(new Song("S07", "To Te Ti", "Wren Evans Official", 195, "data/music/to-te-ti.mp3"));
     }
 
     private void addSongToLibrary(Song song) {
