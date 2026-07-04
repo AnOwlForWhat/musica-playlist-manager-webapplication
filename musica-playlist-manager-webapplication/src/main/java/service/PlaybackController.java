@@ -21,6 +21,10 @@ public class PlaybackController {
     public boolean isRepeat = true;
     public int currentShuffleIndex = 0;
     private Stack<Integer> shuffleIndexHistory = new Stack<>();
+    // Danh sach bai da tron tu songList (dung khi playlist trong va Shuffle bat)
+    private ArrayList<Song> libraryShuffleList = new ArrayList<>();
+    private int libraryShuffleIndex = 0;
+    private static final Random RANDOM = new Random();
     private PlaybackController() {
         playlistManager = new PlaylistManager();
         historyStack = new HistoryStack();
@@ -77,6 +81,49 @@ public class PlaybackController {
         playlistManager.addSong(song);
     }
 
+    public boolean toggleShuffle() {
+        this.isShuffle = !this.isShuffle;
+        if (this.isShuffle) {
+            // --- Fix Bug 1: Shuffle playlist va dam bao vi tri [0] khong phai bai dang phat ---
+            playlistManager.shufflePlaylist();
+            this.currentShuffleIndex = 0;
+            if (currentPlayingSong != null && !playlistManager.shuffleList.isEmpty()) {
+                if (playlistManager.shuffleList.get(0).getId().equals(currentPlayingSong.getId())) {
+                    // Swap vi tri [0] xuong cuoi de tranh phat lai bai vua nghe
+                    int last = playlistManager.shuffleList.size() - 1;
+                    Song temp = playlistManager.shuffleList.get(0);
+                    playlistManager.shuffleList.set(0, playlistManager.shuffleList.get(last));
+                    playlistManager.shuffleList.set(last, temp);
+                }
+            }
+            // --- Fix Bug 2: Khoi tao libraryShuffleList cho truong hop playlist rong ---
+            rebuildLibraryShuffleList();
+        }
+        return this.isShuffle;
+    }
+
+    // Xao tron songList thanh libraryShuffleList, loai tru bai dang phat khoi vi tri dau
+    private void rebuildLibraryShuffleList() {
+        libraryShuffleList = new ArrayList<>(songList);
+        // Fisher-Yates tren libraryShuffleList
+        for (int i = libraryShuffleList.size() - 1; i > 0; i--) {
+            int j = RANDOM.nextInt(i + 1);
+            Song temp = libraryShuffleList.get(i);
+            libraryShuffleList.set(i, libraryShuffleList.get(j));
+            libraryShuffleList.set(j, temp);
+        }
+        libraryShuffleIndex = 0;
+        // Dam bao vi tri [0] khong phai bai dang phat
+        if (currentPlayingSong != null && !libraryShuffleList.isEmpty()) {
+            if (libraryShuffleList.get(0).getId().equals(currentPlayingSong.getId())) {
+                int last = libraryShuffleList.size() - 1;
+                Song temp = libraryShuffleList.get(0);
+                libraryShuffleList.set(0, libraryShuffleList.get(last));
+                libraryShuffleList.set(last, temp);
+            }
+        }
+    }
+
     public void playedSong(Song song) {
         if (song != null) {
             if (currentPlayingSong == null || !currentPlayingSong.getId().equals(song.getId())) {
@@ -85,6 +132,14 @@ public class PlaybackController {
                 }
                 currentPlayingSong = song;
                 currentPlaylistNode = playlistManager.playlist.getNode(song.getId());
+
+                // Neu dang shuffle: dong bo currentShuffleIndex ve sau vi tri bai vua chon
+                if (isShuffle && playlistManager.shuffleList != null) {
+                    int idx = playlistManager.shuffleList.indexOf(song);
+                    if (idx != -1) {
+                        currentShuffleIndex = idx + 1;
+                    }
+                }
             }
         }
     }
@@ -99,14 +154,24 @@ public class PlaybackController {
         
         if (playlistManager.isEmpty()) {
             if (songList.isEmpty()) return null;
-            if (currentPlayingSong == null) {
-                nextSong = songList.get(0);
+            if (isShuffle) {
+                // --- Fix Bug 2: Dung libraryShuffleList thay vi Random thuan tuy ---
+                // Het vong (phat du tat ca bai) thi tron lai va bat dau vong moi
+                if (libraryShuffleList.isEmpty() || libraryShuffleIndex >= libraryShuffleList.size()) {
+                    rebuildLibraryShuffleList();
+                }
+                nextSong = libraryShuffleList.get(libraryShuffleIndex);
+                libraryShuffleIndex++;
             } else {
-                int idx = songList.indexOf(currentPlayingSong);
-                if (idx == -1 || idx + 1 >= songList.size()) {
+                if (currentPlayingSong == null) {
                     nextSong = songList.get(0);
                 } else {
-                    nextSong = songList.get(idx + 1);
+                    int idx = songList.indexOf(currentPlayingSong);
+                    if (idx == -1 || idx + 1 >= songList.size()) {
+                        nextSong = songList.get(0);
+                    } else {
+                        nextSong = songList.get(idx + 1);
+                    }
                 }
             }
         } else if (isShuffle) {          

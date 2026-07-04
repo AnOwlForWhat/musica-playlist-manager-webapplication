@@ -129,17 +129,27 @@ function togglePlay() {
     }
 }
 
-// 4. Bật / Tắt Shuffle
+// 4. Bật / Tắt Shuffle — gọi lên Backend để đồng bộ trạng thái
 function toggleShuffle() {
-    isShuffle = !isShuffle;
-    var btn = document.getElementById('btn-shuffle');
-    if (isShuffle) {
-        btn.style.color = '#fff';
-        btn.style.backgroundColor = '#000';
-    } else {
-        btn.style.color = '';
-        btn.style.backgroundColor = '';
+    var url = 'player?action=toggleShuffle';
+    if (window.contextPath) {
+        url = window.contextPath + '/' + url;
     }
+    fetch(url)
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            if (data.status === 'success') {
+                isShuffle = data.isShuffle;
+                var btn = document.getElementById('btn-shuffle');
+                if (isShuffle) {
+                    btn.style.color = '#fff';
+                    btn.style.backgroundColor = '#000';
+                } else {
+                    btn.style.color = '';
+                    btn.style.backgroundColor = '';
+                }
+            }
+        });
 }
 
 // --- Xử lý sự kiện Audio Player thực tế ---

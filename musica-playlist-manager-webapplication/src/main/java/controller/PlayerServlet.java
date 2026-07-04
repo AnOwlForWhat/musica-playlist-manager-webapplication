@@ -54,6 +54,12 @@ public class PlayerServlet extends HttpServlet {
                     response.getWriter().write("{\"status\":\"not_found\"}");
                 }
                 return;
+            } else if (action.equals("toggleShuffle")) {
+                boolean newState = playbackController.toggleShuffle();
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write(String.format("{\"status\":\"success\", \"isShuffle\":%b}", newState));
+                return;
             }
         }
 
@@ -62,15 +68,16 @@ public class PlayerServlet extends HttpServlet {
         
         if (currentSong != null) {
             String json = String.format(
-                "{\"status\":\"success\", \"title\":\"%s\", \"artist\":\"%s\", \"filePath\":\"%s\", \"duration\":%d}",
+                "{\"status\":\"success\", \"title\":\"%s\", \"artist\":\"%s\", \"filePath\":\"%s\", \"duration\":%d, \"isShuffle\":%b}",
                 currentSong.getTitle().replace("\"", "\\\""), 
                 currentSong.getArtist().replace("\"", "\\\""), 
                 currentSong.getFilePath().replace("\"", "\\\""),
-                currentSong.getDuration()
+                currentSong.getDuration(),
+                playbackController.isShuffle
             );
             response.getWriter().write(json);
         } else {
-            response.getWriter().write("{\"status\":\"idle\"}");
+            response.getWriter().write(String.format("{\"status\":\"idle\", \"isShuffle\":%b}", playbackController.isShuffle));
         }
     }
 
